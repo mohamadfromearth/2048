@@ -27,6 +27,19 @@ public class GameController : MonoBehaviour
     }
 
 
+    private void OnMerge(MoveData moveData)
+    {
+    }
+
+    private void OnMove(MoveData moveData)
+    {
+    }
+
+    private void OnSpawn(SpawnData data)
+    {
+    }
+
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.UpArrow))

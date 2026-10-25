@@ -8,10 +8,15 @@ public class GameService : IGameService
 {
     private readonly IGameRepository _gameRepository;
 
+
     public GameService(IGameRepository gameRepository)
     {
         _gameRepository = gameRepository;
     }
+
+    public event Action<MoveData> OnMove;
+    public event Action<MoveData> OnMerge;
+    public event Action<SpawnData> OnSpawn;
 
     public void InitBoard(Vector2Int size) => _gameRepository.InitBoard(size);
 
@@ -30,7 +35,6 @@ public class GameService : IGameService
 
             if (IsOutOfBounds(next))
             {
-                Debug.Log("Out of bounds");
                 current = next - offset + endOffset;
                 isMergeConsumed = false;
                 if (IsOutOfBounds(current))
@@ -51,25 +55,32 @@ public class GameService : IGameService
                 _gameRepository.SetValue(next, 0);
                 isMergeConsumed = true;
                 result = true;
+
+                OnMerge.Invoke(new MoveData()
+                {
+                    From = next,
+                    To = current,
+                    Value = value
+                });
+
                 continue;
             }
 
             if (IsFree(value))
             {
-                Debug.Log("IsFree!");
                 _gameRepository.SetValue(current, nextValue);
                 _gameRepository.SetValue(next, 0);
                 result = true;
             }
             else
             {
-                Debug.Log("IsNotFree!");
-
-                _gameRepository.SetValue(next, 0);
-                _gameRepository.SetValue(current + offset, nextValue);
-                result = true;
                 current += offset;
+                _gameRepository.SetValue(next, 0);
+                _gameRepository.SetValue(current, nextValue);
+                result = true;
             }
+
+            OnMove.Invoke(new MoveData() { From = next, To = current });
         }
     }
 
