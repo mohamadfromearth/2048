@@ -9,4 +9,5 @@ public interface IGameRepository
     public void SetValue(Vector2Int pos, int value);
 
     public Vector2Int GetBoardSize();
+
 }

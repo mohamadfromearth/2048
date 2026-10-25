@@ -20,4 +20,6 @@ public class ItemView : MonoBehaviour
         spriteRenderer.sprite = viewData.Sprite;
         transform.position = viewData.Position;
     }
+
+    public void SetText(string value) => text.text = value;
 }
