@@ -7,6 +7,7 @@ using Random = System.Random;
 public class GameService : IGameService
 {
     private readonly IGameRepository _gameRepository;
+    private readonly List<Vector2Int> freeValues = new(16);
 
 
     public GameService(IGameRepository gameRepository)
@@ -60,7 +61,7 @@ public class GameService : IGameService
                 {
                     From = next,
                     To = current,
-                    Value = value
+                    Value = value + nextValue,
                 });
 
                 continue;
@@ -84,12 +85,14 @@ public class GameService : IGameService
         }
     }
 
-    public void SpawnNewValue()
+
+    private List<SpawnData> _spawnedData = new(10);
+
+    public List<SpawnData> SpawnNewValues(int count)
     {
+        freeValues.Clear();
         var boardSize = _gameRepository.GetBoardSize();
 
-
-        var freeList = new List<Vector2Int>();
 
         for (int x = 0; x < boardSize.X; x++)
         {
@@ -99,16 +102,36 @@ public class GameService : IGameService
                 var value = _gameRepository.GetValue(pos);
                 if (value == 0)
                 {
-                    freeList.Add(new Vector2Int(x, y));
+                    freeValues.Add(new Vector2Int(x, y));
                 }
             }
         }
 
-        if (freeList.Count > 0)
+        _spawnedData.Clear();
+        var random = new Random();
+
+        for (int i = 0; i < count; i++)
         {
-            var pos = freeList[new Random().Next(0, freeList.Count)];
-            _gameRepository.SetValue(pos, 2);
+            if (freeValues.Count > 0)
+            {
+                var index = random.Next(0, freeValues.Count);
+                var pos = freeValues[index];
+                _gameRepository.SetValue(pos, 2);
+
+                _spawnedData.Add(new SpawnData()
+                {
+                    Position = pos,
+                    Value = 2,
+                });
+                freeValues.RemoveAt(index);
+            }
+            else
+            {
+                return _spawnedData;
+            }
         }
+
+        return _spawnedData;
     }
 
     public int GetValue(Vector2Int position) => _gameRepository.GetValue(position);

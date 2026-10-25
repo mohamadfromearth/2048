@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using DefaultNamespace;
 
 public interface IGameService
@@ -14,5 +15,5 @@ public interface IGameService
 
     public int GetValue(Vector2Int position);
 
-    public void SpawnNewValue();
+    public List<SpawnData> SpawnNewValues(int count);
 }

@@ -22,4 +22,8 @@ public class ItemView : MonoBehaviour
     }
 
     public void SetText(string value) => text.text = value;
+    
+    public void SetPosition(Vector3 position) => transform.position = position;
+    
+    
 }
