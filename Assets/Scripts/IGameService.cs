@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using DefaultNamespace;
 
 public interface IGameService
 {
@@ -12,6 +11,8 @@ public interface IGameService
     public void InitBoard(Vector2Int size);
 
     public bool Move(MoveDirection direction);
+
+    public bool CanMove();
 
     public int GetValue(Vector2Int position);
 

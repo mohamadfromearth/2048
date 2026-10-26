@@ -1,10 +1,7 @@
-namespace DefaultNamespace
+public enum MoveDirection
 {
-    public enum MoveDirection
-    {
-        Top,
-        Down,
-        Left,
-        Right
-    }
+    Top,
+    Down,
+    Left,
+    Right
 }

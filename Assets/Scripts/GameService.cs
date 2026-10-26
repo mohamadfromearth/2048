@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using DefaultNamespace;
 using UnityEngine;
 using Random = System.Random;
 
@@ -8,6 +7,14 @@ public class GameService : IGameService
 {
     private readonly IGameRepository _gameRepository;
     private readonly List<Vector2Int> freeValues = new(16);
+
+    private readonly List<MoveDirection> directions = new()
+    {
+        MoveDirection.Top,
+        MoveDirection.Right,
+        MoveDirection.Left,
+        MoveDirection.Down,
+    };
 
 
     public GameService(IGameRepository gameRepository)
@@ -82,6 +89,50 @@ public class GameService : IGameService
             }
 
             OnMove.Invoke(new MoveData() { From = next, To = current });
+        }
+    }
+
+    public bool CanMove()
+    {
+        foreach (var moveDirection in directions)
+        {
+            if (CanMove(moveDirection)) return true;
+        }
+
+        return false;
+    }
+
+    private bool CanMove(MoveDirection direction)
+    {
+        var current = GetStart(direction);
+        var offset = GetOffset(direction);
+        var endOffset = GetEndOffset(direction);
+        var currentValue = _gameRepository.GetValue(current);
+        if (IsFree(currentValue)) return true;
+
+
+        while (true)
+        {
+            var next = current + offset;
+
+            if (IsOutOfBounds(next))
+            {
+                current = next - offset + endOffset;
+                next = current + offset;
+
+                if (IsOutOfBounds(current))
+                {
+                    return false;
+                }
+            }
+
+            currentValue = _gameRepository.GetValue(current);
+            var nextValue = _gameRepository.GetValue(next);
+
+            if (IsFree(currentValue)) return true;
+            if (IsFree(nextValue)) return true;
+            if (currentValue == nextValue) return true;
+            current = next;
         }
     }
 
