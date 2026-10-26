@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 using Random = System.Random;
 
 public class GameService : IGameService
 {
     private readonly IGameRepository _gameRepository;
+    private readonly IPlayerService _playerService;
     private readonly List<Vector2Int> freeValues = new(16);
+    private readonly Random _random = new();
 
     private readonly List<MoveDirection> directions = new()
     {
@@ -16,15 +17,17 @@ public class GameService : IGameService
         MoveDirection.Down,
     };
 
+    private int _score;
 
-    public GameService(IGameRepository gameRepository)
+
+    public GameService(IGameRepository gameRepository, IPlayerService playerService)
     {
         _gameRepository = gameRepository;
+        _playerService = playerService;
     }
 
     public event Action<MoveData> OnMove;
     public event Action<MoveData> OnMerge;
-    public event Action<SpawnData> OnSpawn;
 
     public void InitBoard(Vector2Int size) => _gameRepository.InitBoard(size);
 
@@ -59,17 +62,28 @@ public class GameService : IGameService
 
             if (isMergeConsumed == false && CanMerge(value, nextValue))
             {
-                _gameRepository.SetValue(current, value + nextValue);
+                var mergeValue = value + nextValue;
+                _gameRepository.SetValue(current, mergeValue);
                 _gameRepository.SetValue(next, 0);
                 isMergeConsumed = true;
                 result = true;
 
-                OnMerge.Invoke(new MoveData()
+                _playerService.SetBestScore(mergeValue);
+
+                if (_score < mergeValue)
+                {
+                    _score = mergeValue;
+                    _gameRepository.SetScore(_score);
+                }
+
+
+                OnMerge(new MoveData()
                 {
                     From = next,
                     To = current,
-                    Value = value + nextValue,
+                    Value = mergeValue,
                 });
+
 
                 continue;
             }
@@ -85,10 +99,10 @@ public class GameService : IGameService
                 current += offset;
                 _gameRepository.SetValue(next, 0);
                 _gameRepository.SetValue(current, nextValue);
-                result = true;
+                if (current != next) result = true;
             }
 
-            OnMove.Invoke(new MoveData() { From = next, To = current });
+            OnMove(new MoveData() { From = next, To = current });
         }
     }
 
@@ -159,15 +173,15 @@ public class GameService : IGameService
         }
 
         _spawnedData.Clear();
-        var random = new Random();
+
 
         for (int i = 0; i < count; i++)
         {
             if (freeValues.Count > 0)
             {
-                var index = random.Next(0, freeValues.Count);
+                var index = _random.Next(0, freeValues.Count);
                 var pos = freeValues[index];
-                var value = random.Next(2, 100);
+                var value = 2;
                 _gameRepository.SetValue(pos, value);
 
                 _spawnedData.Add(new SpawnData()
@@ -185,6 +199,9 @@ public class GameService : IGameService
 
         return _spawnedData;
     }
+
+    public int GetScore() => _gameRepository.GetScore();
+
 
     public int GetValue(Vector2Int position) => _gameRepository.GetValue(position);
 

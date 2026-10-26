@@ -8,6 +8,20 @@ public class Installer : MonoBehaviour, IInstaller
     public void InstallBindings(ContainerBuilder builder)
     {
         builder.RegisterType(
+            typeof(PlayerRepository),
+            new[] { typeof(IPlayerRepository) },
+            Lifetime.Singleton,
+            Resolution.Lazy);
+
+        
+        builder.RegisterType(
+            typeof(PlayerService),
+            new[] { typeof(IPlayerService) },
+            Lifetime.Singleton,
+            Resolution.Lazy);
+
+
+        builder.RegisterType(
             typeof(GameRepository),
             new[] { typeof(IGameRepository) },
             Lifetime.Singleton,

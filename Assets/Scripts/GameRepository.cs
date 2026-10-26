@@ -3,7 +3,7 @@ using UnityEngine;
 public class GameRepository : IGameRepository
 {
     private int[,] _values;
-
+    private int _score;
 
     public void InitBoard(Vector2Int size)
     {
@@ -28,4 +28,7 @@ public class GameRepository : IGameRepository
     }
 
     public Vector2Int GetBoardSize() => new Vector2Int(_values.GetLength(0), _values.GetLength(1));
+
+    public int GetScore() => _score;
+    public void SetScore(int score) => _score = score;
 }

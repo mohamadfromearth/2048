@@ -1,3 +1,4 @@
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
@@ -22,8 +23,15 @@ public class ItemView : MonoBehaviour
     }
 
     public void SetText(string value) => text.text = value;
-    
+
     public void SetPosition(Vector3 position) => transform.position = position;
-    
-    
+
+    public void MoveTo(Vector3 position, float dur, TweenCallback complete = null)
+    {
+        transform.DOMove(position, dur).onComplete = complete;
+    }
+
+    public void SetScale(Vector3 scale) => transform.localScale = scale;
+
+    public void ScaleTo(Vector3 scale, float duration) => transform.DOScale(scale, duration);
 }
