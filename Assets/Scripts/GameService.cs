@@ -167,12 +167,13 @@ public class GameService : IGameService
             {
                 var index = random.Next(0, freeValues.Count);
                 var pos = freeValues[index];
-                _gameRepository.SetValue(pos, 2);
+                var value = random.Next(2, 100);
+                _gameRepository.SetValue(pos, value);
 
                 _spawnedData.Add(new SpawnData()
                 {
                     Position = pos,
-                    Value = 2,
+                    Value = value,
                 });
                 freeValues.RemoveAt(index);
             }

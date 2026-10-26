@@ -1,4 +1,3 @@
-using System;
 using Plugins.Grid;
 using Reflex.Attributes;
 using UnityEngine;
@@ -15,6 +14,8 @@ public class GameController : MonoBehaviour
     private GridSystem2D<ItemView> itemsGrid;
 
     [SerializeField] private GameObject itemBackgroundPrefab;
+    [SerializeField] private UI ui;
+    [SerializeField] private Camera camera;
 
 
     private void Start()
@@ -37,6 +38,15 @@ public class GameController : MonoBehaviour
             itemsGrid.SetValue(itemData.Position.X, itemData.Position.Y, item);
             item.SetPosition(itemsGrid.GetWorldPositionCenter(itemData.Position.X, itemData.Position.Y));
         }
+        
+        SetUpCamera();
+    }
+
+    private void SetUpCamera()
+    {
+        var center = itemsGrid.GetGridCenter();
+        center.z = -10;
+        camera.transform.position = center;
     }
 
     private void SpawnItemBackground(Vector2Int size)
@@ -83,35 +93,46 @@ public class GameController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            Move(MoveDirection.Top);
+            OnArrowClick(MoveDirection.Top);
         }
 
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            Move(MoveDirection.Left);
+            OnArrowClick(MoveDirection.Left);
         }
 
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            Move(MoveDirection.Right);
+            OnArrowClick(MoveDirection.Right);
         }
 
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            Move(MoveDirection.Down);
+            OnArrowClick(MoveDirection.Down);
         }
     }
 
 
-    private void Move(MoveDirection direction)
+    private void OnArrowClick(MoveDirection direction)
     {
         if (gameService.Move(direction))
         {
-            var itemData = gameService.SpawnNewValues(1)[0];
-            var item = itemsPool.Get();
-            item.SetText(itemData.Value.ToString());
-            itemsGrid.SetValue(itemData.Position.X, itemData.Position.Y, item);
-            item.SetPosition(itemsGrid.GetWorldPositionCenter(itemData.Position.X, itemData.Position.Y));
+            var itemDataList = gameService.SpawnNewValues(1);
+
+            if (itemDataList.Count > 0)
+            {
+                var itemData = itemDataList[0];
+                var item = itemsPool.Get();
+                item.SetText(itemData.Value.ToString());
+                itemsGrid.SetValue(itemData.Position.X, itemData.Position.Y, item);
+                item.SetPosition(itemsGrid.GetWorldPositionCenter(itemData.Position.X, itemData.Position.Y));
+            }
+
+            if (gameService.CanMove() == false)
+            {
+                ui.SetEndGameText("You lost!");
+                ui.ShowEndGame();
+            }
         }
     }
 }
