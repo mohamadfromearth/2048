@@ -2,7 +2,6 @@ using Plugins.Grid;
 using Reflex.Attributes;
 using UnityEngine;
 
-
 public class GameController : MonoBehaviour
 {
     [Inject] private readonly IGameService gameService;
@@ -16,6 +15,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private GameObject itemBackgroundPrefab;
     [SerializeField] private UI ui;
     [SerializeField] private Camera camera;
+    [SerializeField] private InputListener inputListener;
 
 
     private void Start()
@@ -24,22 +24,24 @@ public class GameController : MonoBehaviour
         itemsGrid = gridFactory.Create(size.X, size.Y);
         gameService.InitBoard(size);
         SpawnItemBackground(size);
+        SpawnFirstItems();
+        SetUpCamera();
+    }
 
+    private void OnEnable()
+    {
         gameService.OnMove += OnMove;
         gameService.OnMerge += OnMerge;
         gameService.OnSpawn += OnSpawn;
+        inputListener.OnArrowKeyDown += OnArrowClick;
+    }
 
-        var newItems = gameService.SpawnNewValues(2);
-
-        foreach (var itemData in newItems)
-        {
-            var item = itemsPool.Get();
-            item.SetText(itemData.Value.ToString());
-            itemsGrid.SetValue(itemData.Position.X, itemData.Position.Y, item);
-            item.SetPosition(itemsGrid.GetWorldPositionCenter(itemData.Position.X, itemData.Position.Y));
-        }
-        
-        SetUpCamera();
+    private void OnDisable()
+    {
+        gameService.OnMove -= OnMove;
+        gameService.OnMerge -= OnMerge;
+        gameService.OnSpawn -= OnSpawn;
+        inputListener.OnArrowKeyDown -= OnArrowClick;
     }
 
     private void SetUpCamera()
@@ -61,6 +63,21 @@ public class GameController : MonoBehaviour
         }
     }
 
+    private void SpawnFirstItems()
+    {
+        var newItems = gameService.SpawnNewValues(2);
+
+        foreach (var itemData in newItems)
+        {
+            var item = itemsPool.Get();
+            item.SetText(itemData.Value.ToString());
+            itemsGrid.SetValue(itemData.Position.X, itemData.Position.Y, item);
+            item.SetPosition(itemsGrid.GetWorldPositionCenter(itemData.Position.X, itemData.Position.Y));
+        }
+    }
+
+
+    #region Events
 
     private void OnMerge(MoveData mergeData)
     {
@@ -88,34 +105,9 @@ public class GameController : MonoBehaviour
         item.SetPosition(itemsGrid.GetWorldPositionCenter(data.Position.X, data.Position.Y));
     }
 
-
-    private void Update()
+    private void OnArrowClick(KeyCode keyCode)
     {
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            OnArrowClick(MoveDirection.Top);
-        }
-
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            OnArrowClick(MoveDirection.Left);
-        }
-
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            OnArrowClick(MoveDirection.Right);
-        }
-
-        if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            OnArrowClick(MoveDirection.Down);
-        }
-    }
-
-
-    private void OnArrowClick(MoveDirection direction)
-    {
-        if (gameService.Move(direction))
+        if (gameService.Move(keyCode.ToMoveDirection()))
         {
             var itemDataList = gameService.SpawnNewValues(1);
 
@@ -135,4 +127,6 @@ public class GameController : MonoBehaviour
             }
         }
     }
+
+    #endregion
 }
