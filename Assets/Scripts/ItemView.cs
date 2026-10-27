@@ -15,6 +15,8 @@ public class ItemView : MonoBehaviour
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private TextMeshPro text;
 
+    public int Value { get; set; }
+
     public void SetData(ItemViewData viewData)
     {
         text.text = viewData.TextValue;
