@@ -7,7 +7,6 @@ public class GameRepository : IGameRepository
 
     public void InitBoard(Vector2Int size)
     {
-        Debug.Log("InitBoard");
         _values = new int[size.X, size.Y];
     }
 

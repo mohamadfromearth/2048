@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Drawing;
 using Plugins.Grid;
 using Reflex.Attributes;
 using Themes;
@@ -37,14 +38,20 @@ public class GameController : MonoBehaviour
     {
         _gameService.OnMove += OnMove;
         _gameService.OnMerge += OnMerge;
+        _gameService.OnWon += OnWin;
         inputListener.OnArrowKeyDown += OnArrowClick;
+        ui.AddRetryClickListener(OnRetryClick);
+        ui.AddEndGameRetryClickListener(OnEndGameRetryClick);
     }
 
     private void OnDisable()
     {
         _gameService.OnMove -= OnMove;
         _gameService.OnMerge -= OnMerge;
+        _gameService.OnWon -= OnWin;
         inputListener.OnArrowKeyDown -= OnArrowClick;
+        ui.RemoveRetryClickListener(OnRetryClick);
+        ui.RemoveEndGameRetryClickListener(OnEndGameRetryClick);
     }
 
     private void SetUpCamera()
@@ -113,6 +120,12 @@ public class GameController : MonoBehaviour
         item.SetPosition(_itemsGrid.GetWorldPositionCenter(data.Position.X, data.Position.Y));
     }
 
+    private void OnWin()
+    {
+        ui.SetEndGameText("You won!");
+        ui.ShowEndGame();
+    }
+
     private void OnArrowClick(KeyCode keyCode)
     {
         if (_gameService.Move(keyCode.ToMoveDirection()))
@@ -128,13 +141,40 @@ public class GameController : MonoBehaviour
                 ui.ShowEndGame();
             }
         }
+
+        IEnumerator SpawnItemWithDelay(SpawnData data)
+        {
+            yield return _moveItemWaitForSeconds;
+            OnSpawn(data);
+        }
     }
 
 
-    private IEnumerator SpawnItemWithDelay(SpawnData data)
+    private void OnRetryClick()
     {
-        yield return _moveItemWaitForSeconds;
-        OnSpawn(data);
+        _gameService.Retry();
+        var size = _gameService.Size;
+
+        for (int x = 0; x < size.X; x++)
+        {
+            for (int y = 0; y < size.Y; y++)
+            {
+                var item = _itemsGrid.GetValue(x, y);
+                if (item == null) continue;
+                itemsPool.BackToPool(item);
+                _itemsGrid.SetValue(x, y, null);
+            }
+        }
+
+        SpawnFirstItems();
+        ui.SetScoreText("0");
+    }
+
+
+    private void OnEndGameRetryClick()
+    {
+        ui.HideEndGame();
+        OnRetryClick();
     }
 
     #endregion

@@ -7,10 +7,10 @@ public class GameService : IGameService
     private readonly IGameRepository _gameRepository;
     private readonly GameConfig _gameConfig;
     private readonly IPlayerService _playerService;
-    private readonly List<Vector2Int> freeValues = new(16);
+    private readonly List<Vector2Int> _freeValues = new(16);
     private readonly Random _random = new();
 
-    private readonly List<MoveDirection> directions = new()
+    private readonly List<MoveDirection> _directions = new()
     {
         MoveDirection.Top,
         MoveDirection.Right,
@@ -19,6 +19,7 @@ public class GameService : IGameService
     };
 
     private int _score;
+    private bool _isWon;
 
 
     public GameService(IGameRepository gameRepository, IPlayerService playerService, GameConfig gameConfig)
@@ -31,12 +32,15 @@ public class GameService : IGameService
 
     public event Action<MoveData> OnMove;
     public event Action<MoveData> OnMerge;
+    public event Action OnWon;
 
 
     public Vector2Int Size => _gameRepository.GetBoardSize();
 
     public bool Move(MoveDirection direction)
     {
+        if (_isWon) return false;
+
         var current = GetStart(direction);
         var offset = GetOffset(direction);
         var endOffset = GetEndOffset(direction);
@@ -87,6 +91,11 @@ public class GameService : IGameService
                     Value = mergeValue,
                 });
 
+                if (mergeValue >= _gameConfig.TargetScore)
+                {
+                    _isWon = true;
+                    OnWon?.Invoke();
+                }
 
                 continue;
             }
@@ -111,7 +120,7 @@ public class GameService : IGameService
 
     public bool CanMove()
     {
-        foreach (var moveDirection in directions)
+        foreach (var moveDirection in _directions)
         {
             if (CanMove(moveDirection)) return true;
         }
@@ -154,11 +163,11 @@ public class GameService : IGameService
     }
 
 
-    private List<SpawnData> _spawnedData = new(10);
+    private readonly List<SpawnData> _spawnedData = new(10);
 
     public List<SpawnData> SpawnNewValues(int count)
     {
-        freeValues.Clear();
+        _freeValues.Clear();
         var boardSize = _gameRepository.GetBoardSize();
 
 
@@ -170,7 +179,7 @@ public class GameService : IGameService
                 var value = _gameRepository.GetValue(pos);
                 if (value == 0)
                 {
-                    freeValues.Add(new Vector2Int(x, y));
+                    _freeValues.Add(new Vector2Int(x, y));
                 }
             }
         }
@@ -180,10 +189,10 @@ public class GameService : IGameService
 
         for (int i = 0; i < count; i++)
         {
-            if (freeValues.Count > 0)
+            if (_freeValues.Count > 0)
             {
-                var index = _random.Next(0, freeValues.Count);
-                var pos = freeValues[index];
+                var index = _random.Next(0, _freeValues.Count);
+                var pos = _freeValues[index];
                 var value = 2;
                 _gameRepository.SetValue(pos, value);
 
@@ -192,7 +201,7 @@ public class GameService : IGameService
                     Position = pos,
                     Value = value,
                 });
-                freeValues.RemoveAt(index);
+                _freeValues.RemoveAt(index);
             }
             else
             {
@@ -204,6 +213,14 @@ public class GameService : IGameService
     }
 
     public int GetScore() => _gameRepository.GetScore();
+
+    public void Retry()
+    {
+        _score = 0;
+        _isWon = false;
+        _gameRepository.SetScore(_score);
+        _gameRepository.InitBoard(_gameConfig.BoardSize);
+    }
 
 
     public int GetValue(Vector2Int position) => _gameRepository.GetValue(position);
@@ -294,24 +311,6 @@ public class GameService : IGameService
                 return new Vector2Int(1 - size.X, 1);
             case MoveDirection.Right:
                 return new Vector2Int(size.X - 1, 1);
-            default:
-                throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
-        }
-    }
-
-    private Vector2Int GetEnd(MoveDirection direction)
-    {
-        var size = _gameRepository.GetBoardSize();
-
-        switch (direction)
-        {
-            case MoveDirection.Top:
-                return new Vector2Int(size.X - 1, 0);
-            case MoveDirection.Down:
-            case MoveDirection.Left:
-                return new Vector2Int(size.X - 1, size.Y - 1);
-            case MoveDirection.Right:
-                return new Vector2Int(0, size.Y - 1);
             default:
                 throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
         }

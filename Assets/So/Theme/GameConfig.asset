@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameConfig
   boardWidth: 4
   boardHeight: 4
-  targetScore: 2048
+  targetScore: 16

@@ -6,6 +6,8 @@ public interface IGameService
     public event Action<MoveData> OnMove;
     public event Action<MoveData> OnMerge;
 
+    public event Action OnWon;
+
 
     public Vector2Int Size { get; }
 
@@ -18,4 +20,6 @@ public interface IGameService
     public List<SpawnData> SpawnNewValues(int count);
 
     public int GetScore();
+
+    public void Retry();
 }

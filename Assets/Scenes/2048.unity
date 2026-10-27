@@ -420,7 +420,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   theme: {fileID: 11400000, guid: bf42a7e8dc16ea54e92b284c97ab48df, type: 2}
-  colorType: 0
+  colorType: 2
 --- !u!1 &277353555
 GameObject:
   m_ObjectHideFlags: 0
@@ -1311,7 +1311,8 @@ MonoBehaviour:
   ui:
     endGamePanel: {fileID: 1518238265}
     endGameText: {fileID: 1621263827}
-    retryButton: {fileID: 129527855}
+    retryButton: {fileID: 74947983}
+    endGameRetryButton: {fileID: 129527855}
     scoreText: {fileID: 398044380}
     betScoreText: {fileID: 1298080713}
   camera: {fileID: 519420031}

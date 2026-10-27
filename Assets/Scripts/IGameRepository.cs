@@ -11,6 +11,7 @@ public interface IGameRepository
     public Vector2Int GetBoardSize();
 
     public int GetScore();
-    
+
     public void SetScore(int score);
+
 }
