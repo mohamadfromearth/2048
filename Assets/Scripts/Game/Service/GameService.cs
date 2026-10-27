@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Game;
 using Random = System.Random;
 
 public class GameService : IGameService
@@ -83,13 +84,15 @@ public class GameService : IGameService
                     _gameRepository.SetScore(_score);
                 }
 
+                OnMerge?.Invoke(
+                    new MoveData()
+                    {
+                        From = next,
+                        To = current,
+                        Value = mergeValue,
+                    }
+                );
 
-                OnMerge(new MoveData()
-                {
-                    From = next,
-                    To = current,
-                    Value = mergeValue,
-                });
 
                 if (mergeValue >= _gameConfig.TargetScore)
                 {
@@ -114,7 +117,7 @@ public class GameService : IGameService
                 if (current != next) result = true;
             }
 
-            OnMove(new MoveData() { From = next, To = current });
+            OnMove?.Invoke(new MoveData() { From = next, To = current });
         }
     }
 
