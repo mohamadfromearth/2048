@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 9038472850339005416}
   - component: {fileID: 3703877060477527863}
   - component: {fileID: 308727953499088466}
+  - component: {fileID: 7469842580467036851}
   m_Layer: 0
   m_Name: Item
   m_TagString: Untagged
@@ -108,6 +109,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemView
   spriteRenderer: {fileID: 3703877060477527863}
   text: {fileID: 659124068128978161}
+--- !u!114 &7469842580467036851
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 268701270613653013}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2cd3823b35c146feba863910961e3a09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Themes.ItemViewThemeEvent
+  SetColor:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 308727953499088466}
+        m_TargetAssemblyTypeName: ItemView, Assembly-CSharp
+        m_MethodName: SetColor
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  theme: {fileID: 11400000, guid: bf42a7e8dc16ea54e92b284c97ab48df, type: 2}
+  itemView: {fileID: 308727953499088466}
 --- !u!1 &2696618804719815046
 GameObject:
   m_ObjectHideFlags: 0

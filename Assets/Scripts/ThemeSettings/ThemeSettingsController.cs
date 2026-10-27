@@ -11,6 +11,8 @@ namespace ThemeSettings
         [SerializeField] private ThemeLockConfig lockConfig;
         [SerializeField] private ThemeSettingsUI ui;
 
+        private const int ThemesCount = 3;
+
 
         private void OnEnable()
         {
@@ -28,6 +30,7 @@ namespace ThemeSettings
         {
             ui.Show();
             SetLocksActive();
+            SetSelectedThemeActive();
         }
 
         private void OnBackClick() => ui.Hide();
@@ -44,6 +47,15 @@ namespace ThemeSettings
             }
         }
 
+        private void SetSelectedThemeActive()
+        {
+            var themeIndex = (int)theme.Type;
+            for (int i = 0; i < ThemesCount; i++)
+            {
+                ui.SetTickImagesActive(i, i == themeIndex);
+            }
+        }
+
         public void OnSelectTheme(int index)
         {
             var bestScore = playerService.GetBestScore();
@@ -53,6 +65,7 @@ namespace ThemeSettings
             }
 
             theme.SetThemeType((ThemeType)index);
+            SetSelectedThemeActive();
         }
     }
 }

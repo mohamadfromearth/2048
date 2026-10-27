@@ -13,7 +13,6 @@ namespace Themes
         private void OnEnable()
         {
             theme.OnThemeChanged += OnThemeChanged;
-            OnThemeChanged();
         }
 
         private void OnDisable()

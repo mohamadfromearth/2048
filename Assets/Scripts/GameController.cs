@@ -1,8 +1,8 @@
 using System.Collections;
 using Plugins.Grid;
 using Reflex.Attributes;
+using Themes;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class GameController : MonoBehaviour
 {
@@ -10,6 +10,7 @@ public class GameController : MonoBehaviour
     [Inject] private readonly IPlayerService _playerService;
     [SerializeField] private Pool<ItemView> itemsPool;
     [SerializeField] private GridFactory<ItemView> gridFactory;
+    [SerializeField] private Theme theme;
     private GridSystem2D<ItemView> _itemsGrid;
     [SerializeField] private GameObject itemBackgroundPrefab;
     [SerializeField] private UI ui;
@@ -22,10 +23,9 @@ public class GameController : MonoBehaviour
 
     private void Start()
     {
-        var size = new Vector2Int(4, 4);
+        var size = _gameService.Size;
         _itemsGrid = gridFactory.Create(size.X, size.Y);
         _moveItemWaitForSeconds = new WaitForSeconds(moveItemDuration);
-        _gameService.InitBoard(size);
         SpawnItemBackground(size);
         SpawnFirstItems();
         SetUpCamera();
@@ -85,6 +85,8 @@ public class GameController : MonoBehaviour
         {
             itemsPool.BackToPool(item);
             targetItem.SetText(mergeData.Value.ToString());
+            targetItem.Value = mergeData.Value;
+            targetItem.SetColor(theme.GetItemColor(targetItem.Value));
         });
         ui.SetScoreText(_gameService.GetScore().ToString());
         ui.SetBetScoreText(_playerService.GetBestScore().ToString());
@@ -106,6 +108,8 @@ public class GameController : MonoBehaviour
         item.ScaleTo(itemScale, scaleUpItemDuration);
         item.SetText(data.Value.ToString());
         _itemsGrid.SetValue(data.Position.X, data.Position.Y, item);
+        item.Value = data.Value;
+        item.SetColor(theme.GetItemColor(item.Value));
         item.SetPosition(_itemsGrid.GetWorldPositionCenter(data.Position.X, data.Position.Y));
     }
 

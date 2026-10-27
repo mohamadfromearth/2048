@@ -23,6 +23,8 @@ public class ItemView : MonoBehaviour
         spriteRenderer.sprite = viewData.Sprite;
         transform.position = viewData.Position;
     }
+    
+    public void SetColor(Color color) => spriteRenderer.color = color;
 
     public void SetText(string value) => text.text = value;
 

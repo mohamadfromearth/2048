@@ -5,15 +5,19 @@ using Resolution = Reflex.Enums.Resolution;
 
 public class Installer : MonoBehaviour, IInstaller
 {
+    [SerializeField] private GameConfig gameConfig;
+
     public void InstallBindings(ContainerBuilder builder)
     {
+        builder.RegisterValue(gameConfig);
+
         builder.RegisterType(
             typeof(PlayerRepository),
             new[] { typeof(IPlayerRepository) },
             Lifetime.Singleton,
             Resolution.Lazy);
 
-        
+
         builder.RegisterType(
             typeof(PlayerService),
             new[] { typeof(IPlayerService) },

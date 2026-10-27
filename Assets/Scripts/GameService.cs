@@ -5,6 +5,7 @@ using Random = System.Random;
 public class GameService : IGameService
 {
     private readonly IGameRepository _gameRepository;
+    private readonly GameConfig _gameConfig;
     private readonly IPlayerService _playerService;
     private readonly List<Vector2Int> freeValues = new(16);
     private readonly Random _random = new();
@@ -20,17 +21,19 @@ public class GameService : IGameService
     private int _score;
 
 
-    public GameService(IGameRepository gameRepository, IPlayerService playerService)
+    public GameService(IGameRepository gameRepository, IPlayerService playerService, GameConfig gameConfig)
     {
         _gameRepository = gameRepository;
         _playerService = playerService;
+        _gameConfig = gameConfig;
+        _gameRepository.InitBoard(gameConfig.BoardSize);
     }
 
     public event Action<MoveData> OnMove;
     public event Action<MoveData> OnMerge;
 
-    public void InitBoard(Vector2Int size) => _gameRepository.InitBoard(size);
 
+    public Vector2Int Size => _gameRepository.GetBoardSize();
 
     public bool Move(MoveDirection direction)
     {

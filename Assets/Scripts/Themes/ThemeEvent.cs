@@ -39,6 +39,8 @@ namespace Themes
                     return theme.BackgroundColor;
                 case ThemeColorType.Primary:
                     return theme.PrimaryColor;
+                case ThemeColorType.Secondary:
+                    return theme.SecondaryColor;
                 default:
                     throw new ArgumentOutOfRangeException();
             }

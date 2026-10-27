@@ -9,6 +9,7 @@ namespace ThemeSettings
     public class ThemeSettingsUI
     {
         [SerializeField] private GameObject[] lockImages;
+        [SerializeField] private GameObject[] tickImages;
 
         [SerializeField] private GameObject panel;
         [SerializeField] private Button showButton;
@@ -16,6 +17,8 @@ namespace ThemeSettings
 
 
         public void SetLockImagesActive(int index, bool active) => lockImages[index].SetActive(active);
+        
+        public void SetTickImagesActive(int index, bool active) => tickImages[index].SetActive(active);
 
         public void Show() => panel.SetActive(true);
         public void Hide() => panel.SetActive(false);

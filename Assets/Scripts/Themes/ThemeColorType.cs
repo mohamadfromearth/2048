@@ -4,6 +4,7 @@ namespace Themes
     {
         Text,
         Background,
-        Primary
+        Primary,
+        Secondary,
     }
 }
