@@ -1,0 +1,16 @@
+{
+    "name": "GameTest",
+    "rootNamespace": "",
+    "references": [
+        "GUID:2ea600e2004c772409ce84bdeda6c4d4"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

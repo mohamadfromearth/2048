@@ -9,17 +9,27 @@ namespace Game.Presentation
 {
     public class GameController : MonoBehaviour
     {
-        [Inject] private readonly IGameService _gameService;
+        // services
+        [Header("Services")] [Inject] private readonly IGameService _gameService;
         [Inject] private readonly IPlayerService _playerService;
+        [SerializeField] private InputListener inputListener;
         [SerializeField] private Pool<ItemView> itemsPool;
         [SerializeField] private GridFactory<ItemView> gridFactory;
         [SerializeField] private Theme theme;
         private GridSystem2D<ItemView> _itemsGrid;
-        [SerializeField] private GameObject itemBackgroundPrefab;
-        [SerializeField] private UI ui;
-        [SerializeField] private Camera camera;
-        [SerializeField] private InputListener inputListener;
-        [SerializeField] private float moveItemDuration = 0.2f;
+
+        [Space(20)] [Header("UI")] [SerializeField]
+        private UI ui;
+
+        [Space(20)] [Header("Prefabs")] [SerializeField]
+        private GameObject itemBackgroundPrefab;
+
+        [Space(20)] [Header("Others")] [SerializeField]
+        private Camera camera;
+
+        [Space(20)] [Header("ItemsData")] [SerializeField]
+        private float moveItemDuration = 0.2f;
+
         [SerializeField] private float scaleUpItemDuration = 0.2f;
         [SerializeField] private Vector3 itemScale;
         private WaitForSeconds _moveItemWaitForSeconds;
