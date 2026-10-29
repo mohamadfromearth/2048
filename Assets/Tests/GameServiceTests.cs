@@ -17,9 +17,6 @@ namespace Tests
         {
             _gameRepository = new GameRepository();
             var gameConfig = ScriptableObject.CreateInstance<GameConfig>();
-            gameConfig.boardHeight = 4;
-            gameConfig.boardWidth = 4;
-            gameConfig.targetScore = 2048;
             _gameService = new GameService(_gameRepository, new PlayerService(new PlayerRepository()), gameConfig);
         }
 
@@ -30,7 +27,7 @@ namespace Tests
             _gameService.Move(MoveDirection.Top);
 
             var getMergeResult = _gameService.GetValue(new Vector2Int(0, 3));
-            
+
 
             Assert.IsTrue(getMergeResult == 4);
         }

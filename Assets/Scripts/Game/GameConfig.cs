@@ -5,9 +5,9 @@ namespace Game
     [CreateAssetMenu(fileName = "GameConfig", menuName = "So/GameConfig")]
     public class GameConfig : ScriptableObject
     {
-        public int boardWidth;
-        public int boardHeight;
-        public int targetScore;
+        [SerializeField]private int boardWidth = 4;
+        [SerializeField]private int boardHeight = 4;
+        [SerializeField]private int targetScore = 2048;
 
 
         public Vector2Int BoardSize => new Vector2Int(boardWidth, boardHeight);
