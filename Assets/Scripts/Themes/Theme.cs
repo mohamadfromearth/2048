@@ -9,11 +9,8 @@ namespace Themes
     {
         private const string CurrentThemeIndexPrefKey = "CurrentThemeIndexPrefKey";
 
-        [SerializeField] private ItemColors[] itemColors;
-        [SerializeField] private Color[] textColors;
-        [SerializeField] private Color[] backgroundColors;
-        [SerializeField] private Color[] primaryColors;
-        [SerializeField] private Color[] secondaryColors;
+        [SerializeField] private ThemeData[] themeDataList;
+
         [SerializeField] private GameConfig gameConfig;
         private ThemeType _type;
 
@@ -27,17 +24,17 @@ namespace Themes
 
         public Color GetItemColor(int value)
         {
-            var itemColor = itemColors[(int)_type];
+            var itemColor = themeDataList[(int)_type].ItemColor;
             var t = Mathf.Clamp01(value / 100f);
             t = 1f - Mathf.Pow(1f - t, 3f);
             return Color.Lerp(itemColor.MinColor, itemColor.MaxColor, t);
         }
 
-        public Color TextColor => textColors[(int)_type];
-        public Color BackgroundColor => backgroundColors[(int)_type];
-        public Color PrimaryColor => primaryColors[(int)_type];
-        
-        public Color SecondaryColor => secondaryColors[(int)_type];
+        public Color TextColor => themeDataList[(int)_type].TextColor;
+        public Color BackgroundColor => themeDataList[(int)_type].BackgroundColor;
+        public Color PrimaryColor => themeDataList[(int)_type].PrimaryColor;
+
+        public Color SecondaryColor => themeDataList[(int)_type].SecondaryColor;
 
 
         public void SetThemeType(ThemeType type)

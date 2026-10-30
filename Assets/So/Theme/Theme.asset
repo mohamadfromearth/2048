@@ -35,4 +35,26 @@ MonoBehaviour:
   - {r: 0.87106913, g: 0.7683487, b: 0.7683487, a: 1}
   - {r: 0.56918234, g: 0.51280105, b: 0.5184072, a: 1}
   - {r: 0.55345905, g: 0.5060483, b: 0.338515, a: 1}
+  themeDataList:
+  - itemColor:
+      MinColor: {r: 1, g: 1, b: 1, a: 1}
+      MaxColor: {r: 0.98427665, g: 0.44106737, b: 0.44106737, a: 1}
+    textColor: {r: 0, g: 0, b: 0, a: 1}
+    backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+    primaryColor: {r: 0.2509804, g: 0.7764706, b: 0.38431373, a: 1}
+    secondaryColor: {r: 0.87058824, g: 0.76862746, b: 0.76862746, a: 1}
+  - itemColor:
+      MinColor: {r: 0.8742138, g: 0.86815697, b: 0.49071434, a: 1}
+      MaxColor: {r: 0.30752072, g: 0.26303843, b: 0.6509434, a: 1}
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    primaryColor: {r: 0.6431373, g: 0.7294118, b: 0.6666667, a: 1}
+    secondaryColor: {r: 0.5686275, g: 0.5137255, b: 0.5176471, a: 1}
+  - itemColor:
+      MinColor: {r: 0.5345873, g: 0.5048356, b: 0.899371, a: 1}
+      MaxColor: {r: 0.14679344, g: 0.14450076, b: 0.5503144, a: 1}
+    textColor: {r: 0.6627451, g: 0.61960787, b: 0.61960787, a: 1}
+    backgroundColor: {r: 0.0627451, g: 0.48235294, b: 0.1764706, a: 1}
+    primaryColor: {r: 0.7176471, g: 0.3764706, b: 0.23921569, a: 1}
+    secondaryColor: {r: 0.5529412, g: 0.5058824, b: 0.3372549, a: 1}
   gameConfig: {fileID: 11400000, guid: 500bb3d70c3cff4498b911335232959c, type: 2}
